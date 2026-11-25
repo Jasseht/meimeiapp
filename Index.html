@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Meimei</title>
+  <style>
+    body { background: #FFE4EE; font-family: Arial, sans-serif;
+           text-align: center; margin: 0; padding: 20px; }
+    #cara { width: 220px; max-width: 80%; border-radius: 20px; }
+    #mensaje { color: #C2185B; font-size: 22px; font-weight: bold;
+               min-height: 60px; margin: 10px; }
+    p { font-size: 18px; margin: 6px; }
+    button { background: #FF9EC4; color: white; border: none;
+             border-radius: 15px; font-size: 18px; font-weight: bold;
+             width: 200px; padding: 12px 0; margin: 6px; }
+  </style>
+</head>
+<body>
+
+  <img id="cara" src="happymeimei.png">
+  <div id="mensaje">Miau</div>
+
+  <p id="texto-hambre">Hambre: 0</p>
+  <p id="texto-sueno">Sueño: 0</p>
+  <p id="texto-aburr">Aburrimiento: 0</p>
+
+  <button onclick="comer()">Dar de comer</button><br>
+  <button onclick="dormir()">Dormir</button><br>
+  <button onclick="jugar()">Jugar</button>
+
+<script>
+  let hambre = 0;
+  let sueno = 0;
+  let aburrimiento = 0;
+  let ocupado = false;
+  let temporizador = null;
+
+  const cara = document.getElementById("cara");
+  const mensaje = document.getElementById("mensaje");
+  const textoHambre = document.getElementById("texto-hambre");
+  const textoSueno = document.getElementById("texto-sueno");
+  const textoAburr = document.getElementById("texto-aburr");
+
+  function mostrar(imagen, texto) {
+    cara.src = imagen;
+    mensaje.textContent = texto;
+  }
+
+  function actualizar() {
+    textoHambre.textContent = "Hambre: " + hambre;
+    textoSueno.textContent = "Sueño: " + sueno;
+    textoAburr.textContent = "Aburrimiento: " + aburrimiento;
+
+    if (ocupado) {
+      return;
+    }
+
+    if (hambre >= 100) {
+      mostrar("meimeiangry.png", "Me voya morir de hambre, wawaaa");
+    } else if (sueno >= 100) {
+      mostrar("meimeiangry.png", "Me desmayo de sueño:c");
+    } else if (aburrimiento >= 100) {
+      mostrar("meimeiangry.png", "Prestame el play pa' jugar");
+    } else if (hambre >= 50) {
+      mostrar("meimeihunger.png", "Tengo hambrita");
+    } else if (sueno >= 50) {
+      mostrar("meimeisueno.png", "Quiero mimir");
+    } else if (aburrimiento >= 50) {
+      mostrar("happymeimei.png", "Hay que jugar");
+    } else {
+      mostrar("happymeimei.png", "Miau");
+    }
+  }
+
+  function terminarAccion() {
+    ocupado = false;
+    actualizar();
+  }
+
+  function accion(imagen, texto) {
+    clearTimeout(temporizador);
+    ocupado = true;
+    mostrar(imagen, texto);
+    temporizador = setTimeout(terminarAccion, 3000);
+  }
+
+  function comer() {
+    hambre = Math.max(0, hambre - 20);
+    accion("meimeifood.png", "Ñamñamñañam");
+    actualizar();
+  }
+
+  function dormir() {
+    sueno = Math.max(0, sueno - 20);
+    accion("meimeisleep.png", "Zzz");
+    actualizar();
+  }
+
+  function jugar() {
+    aburrimiento = Math.max(0, aburrimiento - 20);
+    accion("meimeiplaying.png", "Yeyyyy");
+    actualizar();
+  }
+
+  function tiempo() {
+    hambre = Math.min(100, hambre + 5);
+    sueno = Math.min(100, sueno + 3);
+    aburrimiento = Math.min(100, aburrimiento + 4);
+    actualizar();
+  }
+
+  setInterval(tiempo, 8000);
+  actualizar();
+</script>
+
+</body>
+</html>
